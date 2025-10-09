@@ -1,0 +1,52 @@
+plugins {
+    id 'java-library'
+    id 'org.flywaydb.flyway' version '9.22.0'
+    id 'jacoco'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':Application')
+    implementation project(':Types')
+    implementation project(':Dto')
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.4.3'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.5.6'
+    runtimeOnly 'org.postgresql:postgresql:42.7.2'
+    testRuntimeOnly 'com.h2database:h2'
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+flyway {
+    url = findProperty('flywayUrl') ?: 'jdbc:postgresql://localhost:5432/fallback_db_name'
+    user = findProperty('flywayUser') ?: 'fallback_user'
+    password = findProperty('flywayPassword') ?: 'fallback_password'
+    locations = ['classpath:db/migration']
+    baselineOnMigrate = true
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+}
