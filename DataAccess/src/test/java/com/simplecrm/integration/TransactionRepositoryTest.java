@@ -60,8 +60,8 @@ class TransactionRepositoryTest {
     @Test
     void findAllNotDeleted_returnsOnlyActiveTransactions() {
         Seller seller = createAndPersistSeller("Seller C");
-        Transaction active = createAndPersistTransaction(seller, new BigDecimal("100"), PaymentType.CASH, LocalDateTime.now(), false);
-        Transaction deleted = createAndPersistTransaction(seller, new BigDecimal("200"), PaymentType.CARD, LocalDateTime.now().plusDays(1), true);
+        createAndPersistTransaction(seller, new BigDecimal("100"), PaymentType.CASH, LocalDateTime.now(), false);
+        createAndPersistTransaction(seller, new BigDecimal("200"), PaymentType.CARD, LocalDateTime.now().plusDays(1), true);
 
         List<Transaction> result = transactionRepository.findAllNotDeleted();
 
@@ -74,8 +74,8 @@ class TransactionRepositoryTest {
         Seller seller1 = createAndPersistSeller("Seller 1");
         Seller seller2 = createAndPersistSeller("Seller 2");
 
-        Transaction tx1 = createAndPersistTransaction(seller1, new BigDecimal("50"), PaymentType.CASH, LocalDateTime.now(), false);
-        Transaction tx2 = createAndPersistTransaction(seller2, new BigDecimal("60"), PaymentType.CARD, LocalDateTime.now(), false);
+        createAndPersistTransaction(seller1, new BigDecimal("50"), PaymentType.CASH, LocalDateTime.now(), false);
+        createAndPersistTransaction(seller2, new BigDecimal("60"), PaymentType.CARD, LocalDateTime.now(), false);
 
         List<Transaction> result = transactionRepository.findBySellerIdAndNotDeleted(seller1.getId());
 
@@ -90,7 +90,7 @@ class TransactionRepositoryTest {
         LocalDateTime end = LocalDateTime.of(2024, 6, 30, 23, 59);
 
         createAndPersistTransaction(seller, new BigDecimal("10"), PaymentType.CASH, start.minusDays(1), false);
-        Transaction inRange = createAndPersistTransaction(seller, new BigDecimal("20"), PaymentType.CARD, start.plusDays(5), false);
+        createAndPersistTransaction(seller, new BigDecimal("20"), PaymentType.CARD, start.plusDays(5), false);
         createAndPersistTransaction(seller, new BigDecimal("30"), PaymentType.TRANSFER, end.plusDays(1), false);
 
         List<Transaction> result = transactionRepository.findBySellerIdAndDateRange(seller.getId(), start, end);
