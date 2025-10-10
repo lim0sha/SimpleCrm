@@ -42,8 +42,6 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-### gradle.properties ###
-# This adds a `gradle.properties` file to the project root.
-# This file is intended for local development and testing purposes only (required for technical task validation)
-#gradle.properties
-
+### Sensitive data ###
+gradle.properties
+Presentation/.env

@@ -1,0 +1,4 @@
+# Flyway connection settings (replace with your own)
+flywayUrl=jdbc:postgresql://localhost:5432/YourDatabaseName
+flywayUser=your_username
+flywayPassword=your_password
