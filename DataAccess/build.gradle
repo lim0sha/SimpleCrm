@@ -1,6 +1,5 @@
 plugins {
     id 'java-library'
-    id 'org.flywaydb.flyway' version '9.22.0'
     id 'jacoco'
 }
 
@@ -30,14 +29,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation project(':Application')
     testImplementation project(':Presentation')
-}
-
-flyway {
-    url = findProperty('flywayUrl') ?: 'jdbc:postgresql://localhost:5432/fallback_db_name'
-    user = findProperty('flywayUser') ?: 'fallback_user'
-    password = findProperty('flywayPassword') ?: 'fallback_password'
-    locations = ['classpath:db/migration']
-    baselineOnMigrate = true
 }
 
 test {
