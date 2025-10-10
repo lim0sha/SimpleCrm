@@ -37,6 +37,24 @@ bootJar {
     mainClass = 'com.simplecrm.Application.Application'
 }
 
+bootRun {
+    doFirst {
+        def envFile = file('.env')
+        if (envFile.exists()) {
+            envFile.eachLine { line ->
+                if (line && !line.startsWith('#')) {
+                    def (key, value) = line.split('=', 2)
+                    if (key && value) {
+                        systemProperty key.trim(), value.trim()
+                        environment key.trim(), value.trim()
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
