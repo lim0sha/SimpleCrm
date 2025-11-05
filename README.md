@@ -1,88 +1,92 @@
 # Simple CRM 📊
-Простая система управления информацией о продавцах и их транзакциях.
+A lightweight Customer Relationship Management system for managing sellers and their transactions.
 
 ---
 
-## Функциональность
-- Управление продавцами и транзакциями: создание, получение, обновление, мягкое и полное удаление.
-- Аналитика: поиск топ-продавца за период, поиск продавцов с оборотом ниже заданного.
-- Поддержка принципов сохранения историчности данных
-    - Версионирование записей в базе данных для Update операций.
-    - Delete Type:
-        - Soft-delete: данные не удаляются физически, а помечаются как удалённые.
-        - Hard-delete: данные удаляются физический из базы данных.
+## Features
+- **Seller & Transaction Management:** Create, retrieve, update, soft-delete, and hard-delete sellers and transactions.
+- **Analytics:**
+    - Identify the top seller within a given period.
+    - Find sellers with a turnover below a specified amount.
+- **Data History Preservation:**
+    - Versioning of database records for `Update` operations.
+    - Delete Types:
+        - **Soft-delete:** Records are marked as deleted but remain in the database.
+        - **Hard-delete:** Records are permanently removed from the database.
+
 ---
 
-## Технологии
+## Technology Stack
 
 ### Backend
 - **Java 21** (Gradle)
 - **Spring Boot 3.4+** (Data JPA, WebMVC, Test)
-- **PostgreSQL 12+** — основная СУБД
-- **Flyway** — управление миграциями базы данных
-- **H2** — in-memory база для интеграционных тестов
-- **SwaggerUI (OpenAPI)** — автоматическая генерация документации API
-- **Spring Boot Test (JUnit 5 + Mockito)** — модульное и интеграционное тестирование
+- **PostgreSQL 12+** — primary database
+- **Flyway** — database migration management
+- **H2** — in-memory database for integration testing
+- **SwaggerUI (OpenAPI)** — automatic API documentation
+- **Spring Boot Test (JUnit 5 + Mockito)** — unit and integration testing
 - **Lombok**
 
-### Инструменты
-- **Gradle** — сборка и управление зависимостями
-- **Postman** — ручное тестирование и отладка API
+### Tools
+- **Gradle** — build and dependency management
+- **Postman** — manual API testing and debugging
 
 ---
 
-## Сборка и запуск
+## Build and Run Instructions
 
-### Предварительные требования
+### Prerequisites
 - Java 21
 - Gradle 8.0+
 - PostgreSQL 12+
 
-### Настройка базы данных
-1. Создайте базу данных в PostgreSQL, например: `simple_crm_db`.
-2. Убедитесь, что пользователь имеет права на чтение/запись.
+### Database Setup
+1. Create a PostgreSQL database, e.g. `simple_crm_db`.
+2. Ensure the user has read/write permissions.
 
-### Конфигурация приложения
-1. Создайте файл `.env` по пути `Presentation/.env`
-2. Выставите в нем конфигурацию для подключения к созданной вами базе данных, следуя примеру из `.env.example`.
-3. Создайте файл `gradle.properties` в корне проекта.
-4. Выставите в нем конфигурацию для Flyway, следуя примеру из `gradle.properties.example`.
-5. Проверьте подключенный data source в вашей IDE.
+### Application Configuration
+1. Create a `.env` file under the `Presentation/.env` directory.
+2. Configure your database connection according to the example in `.env.example`.
+3. Create a `gradle.properties` file in the project root.
+4. Configure Flyway settings based on `gradle.properties.example`.
+5. Verify the configured data source in your IDE.
 
-### Сборка проекта и миграция базы данных
+### Build the Project and Run Database Migrations
 
 ```bash
 
-# Останавливаем все запущенные процессы Spring Boot, если таковые имеются
+# Stop all running Spring Boot processes (if any)
 taskkill /f /im java.exe
 
-# Сборка
+# Clean and build the project
 ./gradlew clean build --refresh-dependencies
 
-# Миграция через Flyway
+# Run Flyway migrations
 ./gradlew :Presentation:flywayClean :Presentation:flywayMigrate
 
-# Запуск приложения
+# Start the application
 ./gradlew :Presentation:bootRun
 ```
 
 > [!WARNING]
-> К сожалению, откат миграций в Flyway доступен только в Pro или Enterprise Edition. Поэтому, если вы вдруг столкнулись с проблемой после миграции БД (не отображаются таблицы / flyway_schema_history невалидна / и т.д.), то просто создайте таблицы в ручную через PgAdmin или console query, встроенную в IDE.
+> Flyway rollbacks are available only in the Pro or Enterprise editions. If you encounter migration issues (missing tables, invalid flyway_schema_history, etc.), manually recreate the necessary tables using PgAdmin or your IDE’s SQL console.
 
-Если сборка прошла корректно, то приложение запустится на `http://localhost:8080`.
+If the build succeeds, the application will be available at: http://localhost:8080
 
 ---
 
-## API
-### Пример использования:
+## API Examples
+
 **Request:**
-```http
+```http request
 POST http://localhost:8080/api/sellers
 Content-Type: application/json
+
 {
-  "name": "John Doe",
-  "contactInfo": "john.doe@example.com",
-  "registrationDate": "2025-10-07T12:30:00"
+    "name": "John Doe",
+    "contactInfo": "john.doe@example.com",
+    "registrationDate": "2025-10-07T12:30:00"
 }
 ```
 **Response:**
@@ -102,7 +106,7 @@ Content-Type: application/json
 ```
 ---
 **Request:**
-```http
+```http request
 DELETE http://localhost:8080/api/transactions/1?deleteType=soft
 ```
 **Response:**
@@ -111,7 +115,7 @@ DELETE http://localhost:8080/api/transactions/1?deleteType=soft
 ```
 ---
 **Request:**
-```http
+```http request
 GET http://localhost:8080/api/analytics/best-period/1
 Content-Type: application/json
 {
@@ -120,7 +124,6 @@ Content-Type: application/json
   "transactionDate" : "2025-09-07T14:00:00",
   "sellerId": 1
 }
-
 ```
 **Response:**
 ```
@@ -132,31 +135,39 @@ Content-Type: application/json
 }
 ```
 
-
-
-
-После запуска приложения полная спецификация будет доступна по адресу: **http://localhost:8080/swagger-ui/index.html**
-
-## Тестирование
-- **Unit-тесты** для сущностей, DTO, сервисов, утилит. Average coverage: 90%
-- **API-тесты** всех основных сценариев использования API.
-- **Integration-тесты** для репозиториев с использованием H2 in-memory базы данных.
-
-### Запуск всех тестов:
-```bash
-
-# Запуск тестов
-./gradlew test
-
-# Генерация отчета с помощью JaCoCo
-./gradlew jacocoRootReport
-```
-Отчёт о покрытии кода генерируются в `build/reports/jacoco/rootHtml/index.html`.
+Once the application is running, the full API specification is available at:
+http://localhost:8080/swagger-ui/index.html
 
 ---
 
+## Testing
+- Unit Tests for entities, DTOs, services, and utilities.
+  Average coverage: 90%
+- API Tests covering all main usage scenarios.
+- Integration Tests for repositories using an H2 in-memory database.
 
-## Контакты
-Для вопросов / обратной связи: [limosha@inbox.ru](mailto:ваш-email@example.com)
+### Run All Tests:
+```bash
+# run tests
+./gradlew test
+```
 
---- 
+# Generate coverage report with JaCoCo
+```bash
+# generate JaCoCo coverage reports
+./gradlew jacocoRootReport
+```
+Code coverage reports are available at:
+`build/reports/jacoco/rootHtml/index.html`
+---
+
+## License
+This project is licensed under the MIT License - see the [LICENSE.md](docs/src/LICENSE.md) file for details.
+
+---
+
+## Contact
+For questions or feedback: limosha@inbox.ru
+
+---
+Feel free to customize this further to better fit your needs!
