@@ -157,8 +157,83 @@ http://localhost:8080/swagger-ui/index.html
 # generate JaCoCo coverage reports
 ./gradlew jacocoRootReport
 ```
-Code coverage reports are available at:
-`build/reports/jacoco/rootHtml/index.html`
+Code coverage reports are available at: `build/reports/jacoco/rootHtml/index.html`
+
+---
+
+## Docker Deployment
+
+The application can be easily deployed using Docker with the provided [Dockerfile](file://D:\Projects\IntellijProjects\shift-lab-simple-crm\Dockerfile) and [docker-compose.yaml](file://D:\Projects\IntellijProjects\shift-lab-simple-crm\docker-compose.yaml) configuration files.
+
+### Prerequisites for Docker Deployment
+- Docker Engine 20.10+
+- Docker Compose v2.0+
+
+### Quick Start with Docker Compose
+
+1. **Create a `.env` file** in the project root directory with your database credentials:
+   ```env
+   DB_USER=postgres
+   DB_PASSWORD=your_secure_password
+   DB_URL=jdbc:postgresql://db:5432/SimpleCrmDb
+   ```
+
+
+2. **Build and start the services**:
+   ```bash
+   # Build the Docker images
+   docker-compose build
+   
+   # Start all services
+   docker-compose up -d
+   ```
+
+
+3. **Access the application**:
+   Once the containers are running, the application will be available at: http://localhost:8080
+
+### Docker Configuration Files
+
+- **`Dockerfile`**: Multi-stage build configuration for the Spring Boot application with security best practices
+- **`docker-compose.yaml`**: Production-ready configuration with environment variables and resource limits
+- **`docker-compose.override.yaml`**: Development configuration with volume mounts for live code reloading
+
+### Environment Variables
+
+The Docker deployment uses the following environment variables (can be set in `.env` file):
+
+- `DB_NAME`: Database name (default: SimpleCrmDb)
+- `DB_USER`: Database username
+- `DB_PASSWORD`: Database password
+- `DB_PORT`: Database port (default: 5432)
+- `APP_PORT`: Application port (default: 8080)
+- `SPRING_PROFILES_ACTIVE`: Spring profile to use (default: docker)
+
+### Useful Docker Commands
+
+```bash
+# View container logs
+docker-compose logs -f
+
+# Stop all services
+docker-compose down
+
+# View running containers
+docker-compose ps
+
+# Execute commands in the running container
+docker-compose exec app bash
+```
+
+
+### Security Features
+
+- Runs application with non-root user
+- Resource limits to prevent DoS attacks
+- Health checks for service monitoring
+- Environment variables for secret management
+- Minimal base images to reduce attack surface
+
 ---
 
 ## License
