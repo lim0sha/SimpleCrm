@@ -157,8 +157,8 @@ http://localhost:8080/swagger-ui/index.html
 # generate JaCoCo coverage reports
 ./gradlew jacocoRootReport
 ```
-Code coverage reports are available at:
-`build/reports/jacoco/rootHtml/index.html`
+Code coverage reports are available at: `build/reports/jacoco/rootHtml/index.html`
+
 ---
 
 ## License
