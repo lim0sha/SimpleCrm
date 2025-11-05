@@ -45,3 +45,11 @@ bin/
 ### Sensitive data ###
 gradle.properties
 Presentation/.env
+
+# Secrets and configs
+.env
+.env.local
+.env.*.local
+
+# Docker
+docker-compose.override.yaml
